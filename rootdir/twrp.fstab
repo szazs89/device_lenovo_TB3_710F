@@ -1,0 +1,28 @@
+# mount point	fstype   device      [device2]     TWRP Flag
+
+/boot       mtd         /dev/bootimg                         flags=display="Boot";backup=1
+/recovery   mtd         /dev/recovery                        flags=display="Recovery";backup=1
+/system     yaffs2      /dev/block/mmcblk0p5                 flags=display="System";backup=1;wipeingui
+/cache      yaffs2      /dev/block/mmcblk0p6                 flags=display="Cache";backup=1;wipeingui;wipeduringfactoryreset
+/data       yaffs2      /dev/block/mmcblk0p7                 flags=display="Data";backup=1;wipeingui;wipeduringfactoryreset
+/sdcard     vfat        /dev/block/mmcblk0p1 /dev/block/mmcblk0
+/nvram      emmc        /dev/nvram                           flags=display="NVRAM [nvram]";backup=1;flashimg=1
+/mbr        emmc        /dev/mbr /dev/block/mmcblk0          flags=display="Master Boot Record [mbr]";backupname="MBR & EBR1";backup=1;flashimg=1
+/ebr1       emmc        /dev/ebr1 /dev/block/mmcblk0p1       flags=display="Extended Boot Record [ebr1]";subpartitionof=/mbr;backup=1;flashimg=1
+/protect_f  emmc	/dev/block/mmcblk0p2 /dev/protect_f  flags=display="Protect F";backupname="Protect F&S [protect_f&s]";backup=1
+/protect_s  emmc	/dev/block/mmcblk0p3 /dev/protect_s  flags=display="Protect S";subpartitionof=/protect_f;backup=1
+/seccfg	    emmc	/dev/seccfg                          flags=display="SecCfg";backupname="Misc [seccfg,misc,expdb]";backup=1
+/uboot	    emmc	/dev/uboot	
+/sec_ro	    emmc	/dev/sec_ro /dev/block/mmcblk0p4     flags=backupname="SecRo [secro]";backup=1;flashimg=1
+/misc       emmc	/dev/misc                            flags=display="Misc";subpartitionof=/seccfg;backup=1;flashimg=0
+/logo       emmc	/dev/logo                            flags=backupname="Power-on graphics [logo]";backup=1;flashimg=1
+/expdb	    emmc	/dev/expdb                           flags=display="Expdb";subpartitionof=/seccfg;backup=1;flashimg=0
+/tee1       emmc	/dev/tee1                            flags=display="Trusted Execution Environment 1 [tee1]";backupname="Trustzone [tee1&2]";backup=1;flashimg=1
+/tee2       emmc	/dev/tee2                            flags=display="Trusted Execution Environment 2 [tee2]";subpartitionof=/tee1;backup=1;flashimg=1
+/kb         emmc	/dev/kb                              flags=display="KB";backupname="Keyblocks [kb,dkb]";backup=1;flashimg=0
+/dkb        emmc	/dev/dkb                             flags=display="DKB";subpartitionof=/kb;backup=1;flashimg=0
+/frp        emmc	/dev/frp                             flags=backupname="Factory Reset Protection [frp]";backup=1;flashimg=0
+/system_image emmc	/dev/block/mmcblk0p5                 flags=backup=0;flashimg=1
+/external_sd auto	/dev/block/mmcblk1p1 /dev/block/mmcblk1	flags=storagename="Micro SD card [external_sd]";settingsstorage;andsec;wipeingui;removable;backup=0
+/sd-ext	    ext4	/dev/block/mmcblk1p2                 flags=storagename="Micro SD partition 2 [sd-ext]";wipeingui;removable;backup=1;canencryptbackup=1
+/usbotg	    auto        /dev/block/sda1	/dev/block/sda       flags=storagename="USB-OTG";storage;wipeingui;removable;backup=0
