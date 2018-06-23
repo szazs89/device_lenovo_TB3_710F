@@ -1,0 +1,21 @@
+0a1,2
+> /app/FmRadio/FmRadio.apk
+> /app/FmRadio/lib/arm/libfmjni.so
+32a35,37
+> /etc/agps_profiles_conf2.xml
+> /etc/audio/audio_effects.conf
+> /etc/audio/audio_policy.conf
+37a43
+> /etc/camera/camerasize.xml
+43a50
+> /etc/egl.cfg
+60a68,76
+> /etc/gps/gps.conf
+> /etc/hostapd/hostapd.accept
+> /etc/hostapd/hostapd.deny
+> /etc/hostapd/hostapd_default.conf
+> /etc/keylayout/ACCDET.kl
+> /etc/keylayout/AVRCP.kl
+> /etc/keylayout/Generic.kl
+> /etc/keylayout/qwerty.kl
+> /etc/media/media_codecs.xml
