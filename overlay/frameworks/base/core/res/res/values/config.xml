@@ -107,17 +107,17 @@ coexist
          PackageManager.FEATURE_FREEFORM_WINDOW_MANAGEMENT feature to your device specification.
          The duplication is necessary, because this information is used before the features are
          available to the system.-->
-    <bool name="config_freeformWindowManagement">true</bool>
+    <!-- bool name="config_freeformWindowManagement">true</bool -->
      
     <!-- True if the device supports at least one form of multi-window.
          E.g. freeform, split-screen, picture-in-picture. -->
-    <bool name="config_supportsMultiWindow">true</bool>
+    <!-- bool name="config_supportsMultiWindow">true</bool -->
      
     <!-- True if the device supports split screen as a form of multi-window. -->
-    <bool name="config_supportsSplitScreenMultiWindow">true</bool>
+    <!-- bool name="config_supportsSplitScreenMultiWindow">true</bool -->
      
     <!-- True if the device supports running activities on secondary displays. -->
-    <bool name="config_supportsMultiDisplay">true</bool>
+    <!-- bool name="config_supportsMultiDisplay">true</bool -->
     
     <!-- Whether WiFi display is supported by this device.
          There are many prerequisites for this feature to work correctly.
