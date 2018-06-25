@@ -22,6 +22,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_DIR)/rootdir,root)
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_DIR)/configs/etc,system/etc)
 
 $(call inherit-product, build/target/product/full.mk)
 
@@ -55,6 +56,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml
 #    frameworks/native/data/etc/android.hardware.wifi.aware.xml:system/etc/permissions/android.hardware.wifi.aware.xml \
 
+PRODUCT_PACKAGES += \
+    libxlog
 
 PRODUCT_PACKAGES += \
     libwpa_client \
