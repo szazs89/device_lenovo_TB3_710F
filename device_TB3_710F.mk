@@ -1,30 +1,32 @@
+DEVICE_DIR := device/lenovo/TB3_710F
+
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+
+# according to Tab2A710F... (does it conflict with full.mk ?)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
 $(call inherit-product-if-exists, vendor/lenovo/TB3_710F/TB3_710F-vendor.mk)
 
-DEVICE_PACKAGE_OVERLAYS += device/lenovo/TB3_710F/overlay
+# Prebuilt Kernel
+# (does it really work that way as it is supposed to...?)
+ifeq ($(TARGET_PREBUILT_KERNEL),)
+    LOCAL_KERNEL := $(DEVICE_DIR)/zImage
+else
+    LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+endif
 
-#Prebuilt Kernel
-##ifeq ($(TARGET_PREBUILT_KERNEL),)
-#  LOCAL_KERNEL := device/lenovo/TB3_710F/prebuilt/kernel
-#else
-#  LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-#endif
-#
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_KERNEL):kernel
+PRODUCT_COPY_FILES += \
+    $(LOCAL_KERNEL):kernel
 
-LOCAL_PATH := device/lenovo/TB3_710F
-
-PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/rootdir,root)
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_DIR)/rootdir,root)
 
 $(call inherit-product, build/target/product/full.mk)
 
 # Overlay Binaries
-$(call inherit-product, $(LOCAL_PATH)/overlay-binaries/overlay-binaries.mk)
+$(call inherit-product, $(DEVICE_DIR)/overlay-binaries/overlay-binaries.mk)
 
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_DIR)/overlay
 
@@ -50,8 +52,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.location.xml:system/etc/permissions/android.hardware.location.xml \
-    frameworks/native/data/etc/android.hardware.wifi.aware.xml:system/etc/permissions/android.hardware.wifi.aware.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml
+#    frameworks/native/data/etc/android.hardware.wifi.aware.xml:system/etc/permissions/android.hardware.wifi.aware.xml \
 
 
 PRODUCT_PACKAGES += \
@@ -143,3 +145,9 @@ PRODUCT_NAME := full_TB3_710F
 PRODUCT_DEVICE := TB3_710F
 TARGET_SCREEN_HEIGHT := 1024
 TARGET_SCREEN_WIDTH := 600
+
+# call dalvik heap config
+$(call inherit-product, frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)
+
+# call hwui memory config
+$(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
