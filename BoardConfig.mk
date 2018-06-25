@@ -1,10 +1,12 @@
 USE_CAMERA_STUB := true
 
+DEVICE_DIR := device/lenovo/TB3_710F
+
 # inherit from the proprietary version
 -include vendor/lenovo/TB3_710F/BoardConfigVendor.mk
 
 # Additional
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_DIR)/include
 
 TARGET_ARCH := arm
 TARGET_NO_BOOTLOADER := true
@@ -16,16 +18,26 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a7
 TARGET_CPU_SMP := true
 ARCH_ARM_HAVE_TLS_REGISTER := true
+ARCH_ARM_HAVE_NEON := true
 TARGET_BOOTLOADER_BOARD_NAME := mt8127
+# Tzul's 3.0.2 TWRP needs this for flashing (updater-script assert check)
+TARGET_OTA_ASSERT_DEVICE := TB3-710F
 
 # Kernel
 
 BOARD_KERNEL_CMDLINE := androidboot.selinux=permissive initcall_debug ignore_loglevel trace_event=block,ext4 trace_buf_size=64M trace_event=sched_wakeup,sched_switch,sched_blocked_reason,sched_cpu_hotplug
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 2048
-TARGET_KERNEL_SOURCE := kernel/lenovo/TB3_710F
-TARGET_KERNEL_CONFIG := hq8127_tb_b2b_l_defconfig
-BOARD_KERNEL_IMAGE_NAME := Image
+
+BUILD_KERNEL_FROM_SOURCE := false
+ifeq ($(BUILD_KERNEL_FROM_SOURCE),true)
+    TARGET_KERNEL_SOURCE := kernel/lenovo/TB3_710F
+    TARGET_KERNEL_CONFIG := hq8127_tb_b2b_l_defconfig
+    BOARD_KERNEL_IMAGE_NAME := Image
+else
+# obtain zImage from stock boot.img (using abootimg, e.g.)
+    TARGET_PREBUILT_KERNEL := $(DEVICE_DIR)/zImage
+endif
 
 # Partitions
 
@@ -34,34 +46,42 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1696440320
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 5436866560
 TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
 
 RECOVERY_VARIANT := twrp
 
-
 BOARD_HAS_NO_SELECT_BUTTON := true
 
 # System ROM configuration
-LOCAL_DEX_PREOPT := true
-PRODUCT_DEX_PREOPT_BOOT_FLAGS := true
-PRODUCT_DEX_PREOPT_DEFAULT_FLAGS := true
-PRODUCT_DEX_PREOPT_MODULE_CONFIGS := true
+#LOCAL_DEX_PREOPT := true
+#PRODUCT_DEX_PREOPT_BOOT_FLAGS := true
+#PRODUCT_DEX_PREOPT_DEFAULT_FLAGS := true
+#PRODUCT_DEX_PREOPT_MODULE_CONFIGS := true
 
 # MTK Hardware
 BOARD_USES_MTK_HARDWARE := true
 BOARD_HAS_MTK_HARDWARE := true
 MTK_HARDWARE := true
-BLOCK_BASED_OTA := true
+BLOCK_BASED_OTA := false
 BOARD_HAS_MTK := true
 MTK_HWC_CHIP := mt8127
 MTK_HWC_SUPPORT := true
 MTK_WFD_SUPPORT := true
 MTK_PQ_SUPPORT := true
 MTK_ION_SUPPORT := true
-MTK_HDMI_SUPPORT := true
+MTK_HDMI_SUPPORT := false
 MTK_SENSOR_SUPPORT := true
+
+# Flags -- added from Tab2A710F by szazs@mm.bme.hu
+TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -DMTK_HARDWARE -mfpu=neon -mfloat-abi=softfp
+COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
+COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE
+COMMON_GLOBAL_CFLAGS += -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
+COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
 
 # Display
 USE_OPENGL_RENDERER := true
@@ -98,11 +118,11 @@ TARGET_SYSTEM_PROP := device/lenovo/TB3_710F/system.prop
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_MTK := true
 BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_DIR)/bluetooth
 
 # SELinux
 BOARD_SEPOLICY_DIRS := \
-       $(LOCAL_PATH)/sepolicy
+       $(DEVICE_DIR)/sepolicy
 
 BOARD_SEPOLICY_UNION := \
         seapp_contexts  \
