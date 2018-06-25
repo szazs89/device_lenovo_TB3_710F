@@ -124,14 +124,14 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_DIR)/bluetooth
 TARGET_LDPRELOAD += libxlog.so
 
 # SELinux
-BOARD_SEPOLICY_DIRS := \
-       $(DEVICE_DIR)/sepolicy
-
-BOARD_SEPOLICY_UNION := \
-        seapp_contexts  \
-        service_contexts \
-        property_contexts \
-        file_contexts
+#BOARD_SEPOLICY_DIRS := \
+#       $(DEVICE_DIR)/sepolicy
+#
+#BOARD_SEPOLICY_UNION := \
+#        seapp_contexts  \
+#        service_contexts \
+#        property_contexts \
+#        file_contexts
 
 # TWRP
 TW_THEME := landscape_hdpi
