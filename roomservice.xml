@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- based on https://raw.githubusercontent.com/Cyanogenmod-for-Lenovo-Tab2A7-10F/android/cm-12.1/Tab2A710F_manifest.xml -->
+<!-- move this file to .repo/local_manifests after "repo init ..." then "repo sync" -->
+<manifest>
+  <!-- declare list of repositories to fetch from -->
+  <remote name="lenovo"
+        fetch="https://github.com/Cyanogenmod-for-Lenovo-Tab2A7-10F" />
+  <remote name="szazs89"
+        fetch="https://github.com/szazs89" />
+  <remote name="andrew264"
+        fetch="https://github.com/andrew264" />
+
+  <!-- If you don't build on a Mac system, you can remove all 'darwin' prebuilts -->
+  <remove-project name="platform/prebuilts/clang/darwin-x86/3.1" />
+  <remove-project name="platform/prebuilts/clang/darwin-x86/3.2" />
+  <remove-project name="platform/prebuilts/clang/darwin-x86/arm/3.3" />
+  <remove-project name="platform/prebuilts/clang/darwin-x86/host/3.4"  />
+  <remove-project name="platform/prebuilts/clang/darwin-x86/host/3.5" />
+  <remove-project name="platform/prebuilts/clang/darwin-x86/mips/3.3" />
+  <remove-project name="platform/prebuilts/clang/darwin-x86/x86/3.3" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/aarch64/aarch64-linux-android-4.8" />
+  <remove-project name="CyanogenMod/android_prebuilts_gcc_darwin-x86_aarch64_aarch64-linux-android-4.9" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/arm/arm-eabi-4.8" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/arm/arm-linux-androideabi-4.8" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/host/headers" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/host/i686-apple-darwin-4.2.1" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/mips/mips64el-linux-android-4.9" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/mips/mipsel-linux-android-4.8" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/mips/mips64el-linux-android-4.8" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/x86/x86_64-linux-android-4.8" />
+  <remove-project name="platform/prebuilts/gcc/darwin-x86/x86/x86_64-linux-android-4.9" />
+  <remove-project name="platform/prebuilts/python/darwin-x86/2.7.5" />
+  <!-- end of 'darwin' components -->
+
+  <!-- list packages to remove from standard build    -->
+   <remove-project name="CyanogenMod/android_system_netd" /> 
+   <remove-project name="CyanogenMod/android_packages_apps_Settings" />
+   <remove-project name="CyanogenMod/android_frameworks_base" />
+
+  <!-- declare packages replacements  -->
+   <project path="system/netd" name="android_system_netd" remote="lenovo" revision="cm-12.1" />
+   <project path="packages/apps/Settings" name="cm_packages_apps_Settings" remote="lenovo" revision="cm-12.1" />
+   <project path="frameworks/base" name="android_frameworks_base" remote="lenovo" revision="cm-12.1" />
+   <!-- project path="device/lenovo/Tab2A710F" name="android_device_lenovo_Tab2A710F" remote="lenovo" revision="cm-12.1" / -->
+
+   <!-- declare additional packages to build -->
+   <!-- add this(?) if you want to try buil TWRP recovery, as well -->
+   <!-- project path="bootable/recovery-twrp" name="omnirom/android_bootable_recovery.git" remote="github" revision="android-5.1" / -->
+
+  <!-- And finally checkout components specifics to Lenovo TB3-710F -->
+   <project path="device/lenovo/TB3_710F" name="device_lenovo_TB3_710F" remote="szazs89" revision="master" />
+   <!-- own vendor dirs (proprietary files) aren't added yet:
+	use extract-files.sh to obtain them from the stock /system dir of your device;
+	the repository below does not contain all the necessary files, afraid -->
+   <!-- project path="vendor/lenovo/TB3_710F" name="android_vendor_lenovo_TB3_710F" remote="andrew264" revision="master" / -->
+
+</manifest>

@@ -21,7 +21,7 @@ endif
 PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
-PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_DIR)/rootdir,root)
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_DIR)/ramdisk,root)
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_DIR)/configs/etc,system/etc)
 
 $(call inherit-product, build/target/product/full.mk)
