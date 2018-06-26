@@ -2,11 +2,13 @@
 #connectivity related init script
 import init.project.rc
 import init.connectivity.rc
+import init.charging.rc
 import init.mt8127usb.rc
 import init.aee.rc
 import init.ssd.rc
 import init.no_ssd.rc
 import init.ssd_nomuser.rc
+import init.mt8127.power.rc
    
 on init
     export USBOTG_STORAGE /storage/usbotg
@@ -80,10 +82,74 @@ on init
     chmod 0666 /dev/graphics/fb0
     chown system graphics /dev/graphics/fb0
 
+
+
+# PixNDom fix
+    # 16/01/2016 : commented
+    #chmod 0660 /dev/cpuctl
+
+    chmod 0666 /dev/mali
+    chown system graphics /dev/mali
+
+    mknod /dev/stpwmt c 190 0;
+    chmod 0660 /dev/stpwmt
+
+    # 16/01/2016 : folowing line does not seem to be applied ? 
+    chown system system /dev/stpwmt
+
+
+# 16/01/2016 - ok, but /dev/stp*
+    chmod 0666 /dev/cpuctl
+
+    chmod 0660 /dev/touch
+    chown root system /dev/touch
+
+    chmod 0600 /dev/RT_Monitor
+    chown system system /dev/RT_Monitor
+
+    #chmod 0600 /dev/btif # dejà ok
+    chown system system /dev/btif
+
+    chmod 0660 /dev/mt6605
+    chown system system /dev/mt6605
+
+    chmod 0660 /dev/nvram
+    chown root system /dev/nvram
+
+    chmod 0660 /dev/stpgps
+    chown gps gps /dev/stpgps
+
+    chmod 0660 /dev/stpbt
+    chown bluetooth radio /dev/stpbt
+
+    chmod 0660 /dev/wmtWifi
+    chown system system /dev/wmtWifi
+
+    chmod 0660 /dev/pro_info
+    chown root system /dev/pro_info
+
+    chmod 0660 /dev/dkb
+    chown root system /dev/dkb
+
+    chmod 0660 /dev/kb
+    chown root system /dev/kb
+
+    chmod 0640 /dev/bootimg
+    chown root system /dev/bootimg
+
+    chmod 0600 /dev/mtgpio
+    chown radio root /dev/mtgpio
+# / 16/01/2016
+
+# FM Radio device node
+    chmod 0660 /dev/fm
+    chown system media /dev/fm
+
+# PixNDom fix end ##################
+
 #HWComposer Vsync
     chmod 0666 /dev/mtkfb_vsync
     chown system graphics /dev/mtkfb_vsync
-
 
 #HWComposer fence
     chmod 0666 /dev/sw_sync
@@ -109,10 +175,6 @@ on init
 # Change SMI mtk_sched permission
     chmod 0660 /dev/mtk_sched
     chown system media /dev/mtk_sched
-
-#BT SCO CVSD
-    chmod 0660 /dev/ebc
-    chown system media /dev/ebc
 
 # Change DISP permission
     chmod 0666 /dev/mtk_disp
@@ -162,6 +224,9 @@ on init
     chown root system /proc/mtprof/cputime
     chown root system /proc/mtprof/reboot_pid
 	
+#For Runin Test. Added by wangfeng merge from apllo
+    chown system system /sys/devices/platform/battery/Runin_test
+
 on boot
 # start sensor services
 # start akmd8963 
@@ -172,18 +237,12 @@ start NvRAMAgent
     chown system system /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
     chmod 0660 /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
 
-on charger
-    mount ext4 /emmc@android /system ro wait
-    mount ubifs ubi@system /system ro wait
-    start kpoc_charger
-    start console
-    start servicemanager
-
 on fs
     
-#   export EXTERNAL_STORAGE /mnt/sdcard
+#    export EXTERNAL_STORAGE /mnt/sdcard
 #    mkdir /mnt/sdcard 0000 system system
 #    symlink /mnt/sdcard /sdcard
+
 
 # mount mtd partitions
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
@@ -207,14 +266,15 @@ on fs
 #on fs_property:ro.mount.fs=EXT4
     write /proc/bootprof "INIT:eMMC:Mount_START"
     mount_all /fstab.mt8127
-    swapon_all /fstab.mt8127
     write /proc/bootprof "INIT:eMMC:Mount_END"
-    mount iso9660 loop@/system/etc/Lenovo_Drive.iso /mnt/cd-rom ro
-    
+
+# PixNDom Don't mount Lenovo CDRom image
+#    mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
+# PixNDom end
+
     #change partition permission
     exec /system/etc/partition_permission.sh 
-    exec /system/bin/tune2fs -O has_journal -u 10010 -r 32768 /emmc@usrdata
-
+    
 # RGX init
 service pvrsrvctl /system/vendor/bin/pvrsrvctl --start 
     class core
@@ -247,8 +307,6 @@ on post-fs-data
     mkdir /data/misc/ppp 0770 bluetooth net_bt
     # bluetooth
     mkdir /data/@btmtk 0770 bluetooth net_bt
-    chown bluetooth bluetooth /data/@btmtk/host_cache
-    chown bluetooth bluetooth /data/@btmtk/dev_cache
     chown bluetooth bluetooth /dev/hid-keyboard
     chmod 0660 /dev/hid-keyboard
 
@@ -398,15 +456,13 @@ on property:vold.decrypt=trigger_restart_framework
 
 #
 #sensor service (begin)
-service msensord /system/bin/msensord
-    class main
-    oneshot
+#service msensord /system/bin/msensord
+#    class main
+#    oneshot
 
 #
 #drm operation server
 service kisd /system/bin/kisd
-    user system
-    group system media drmrpc
     class main
 
 service nvram_daemon /system/bin/nvram_daemon
@@ -441,8 +497,8 @@ service nvram_daemon /system/bin/nvram_daemon
     write /proc/sys/net/netfilter/nf_conntrack_tcp_no_window_check 1
     write /proc/sys/net/ipv4/tcp_rto_min 400
 service NvRAMAgent /system/bin/nvram_agent_binder
-	user system
-	group system everybody
+	user root
+	group system
 
 service akmd8963 /system/bin/akmd8963 
     disabled
@@ -660,10 +716,6 @@ service guiext-server /system/bin/guiext-server
     chmod 660 /dev/ttyGS1
     chown system /dev/ttyGS1
 
-# BT relayer mode used VCOM
-    chmod 0660 /dev/ttyGS2
-    chown bluetooth radio /dev/ttyGS2
-
 service atci_service /system/bin/atci_service
     class core
     socket atci-service stream 660 radio system
@@ -746,18 +798,12 @@ service MtkCodecService /system/bin/MtkCodecService
 service mnld /system/xbin/mnld
     class main
     user gps
-    group gps inet misc sdcard_rw sdcard_r media_rw system
+    group system gps inet misc sdcard_rw sdcard_r media_rw
     socket mnld stream 660 gps system
 
 on boot
 # AGPS
     mkdir /data/agps_supl 0771 gps system
-
-service kpoc_charger /system/bin/kpoc_charger
-    user root
-    group root
-    class charger
-    disabled
 
  ###########add for 3Gdongle 
 
@@ -848,37 +894,6 @@ service ipod /system/bin/ipod
     disabled
 
 #
-# wangyi add for countrycode
-#
-service nvram_country /system/bin/nvram_country
-    user root
-    group root
-    chmod 0644 /system/bin/nvram_country
-    oneshot
-    disabled
-
-
-on property:service.nvram_init=Ready
-start nvram_country
-
-#
-# wangyi add for push out
-#
-service lenovoSN2 /system/bin/lenovoSN2
-    user root
-    disabled
-    oneshot
-    on property:set_gsm_serial=1
-    start lenovoSN2
-
-service lockscreenMain /system/bin/lockscreenMain
-    user root
-    oneshot
-    disabled
-    start lockscreenMain
-#end by wmh
-
-#
 # swap
 #
 service enableswap /system/bin/sh /enableswap.sh
@@ -891,46 +906,3 @@ service batterywarning /system/bin/batterywarning
     class main
     user shell
     group shell
-
-#
-# jingguangyao add for root_channel
-#
-    
-    service nac_server /system/bin/nac_server
-    class main
-    user root
-#end 
-
-#add by liugang for acer
-service nvram_acer /system/bin/nvram_acer
-    user root
-    oneshot
-    disabled
-on property:service.nvram_init=Ready
-start nvram_acer
-#end by liugang for acer
-
-#HQ_Hutao added for USB enthernet begin
-#add by HQ_yangnaochun_20141013 for ethernet function
-service dhcpcd_eth0 /system/bin/logwrapper /system/bin/dhcpcd -ABKL
-    disabled
-    oneshot
-#HQ_Hutao added for USB enthernet end
-
-# Huangyisong add for HQfactory start
-service nvram_hqfactory /system/bin/nvram_hqfactory
-    user root
-    group root
-    oneshot
-    disabled
-
-on property:service.nvram_init=Ready
-    start nvram_hqfactory
-    
-# stop tracing on boot complete
-on property:sys.boot_completed=1
-    write /d/tracing/tracing_on 0
-    write /d/tracing/events/ext4/enable 0
-    write /d/tracing/events/block/enable 0
-
-# add end
