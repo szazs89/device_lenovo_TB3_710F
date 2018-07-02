@@ -126,35 +126,18 @@ TARGET_LDPRELOAD += libxlog.so
 # SELinux
 #BOARD_SEPOLICY_DIRS := \
 #       $(DEVICE_DIR)/sepolicy
-#
+
 #BOARD_SEPOLICY_UNION := \
 #        seapp_contexts  \
 #        service_contexts \
 #        property_contexts \
 #        file_contexts
 
-# TWRP
-TW_THEME := landscape_hdpi
 DEVICE_RESOLUTION := 1024x600
 #RECOVERY_FSTAB_VERSION := 1
 TARGET_RECOVERY_FSTAB := device/lenovo/TB3_710F/recovery/root/recovery.fstab
 TARGET_RECOVERY_INITRC := device/lenovo/TB3_710F/recovery/root/init.rc
-BOARD_HAS_NO_REAL_SDCARD := false
-TW_OEM_BUILD := true
-TW_NEVER_UNMOUNT_SYSTEM := true
-TW_DEFAULT_BRIGHTNESS := 150
-TWRP_INCLUDE_LOGCAT := true
-TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
-TW_MAX_BRIGHTNESS := 255
-RECOVERY_TOUCHSCREEN_FLIP_X := false
-RECOVERY_TOUCHSCREEN_FLIP_Y := true
-RECOVERY_TOUCHSCREEN_SWAP_XY := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
-TW_CUSTOM_BATTERY_PATH := /sys/class/power_supply/battery/capacity
-TW_CUSTOM_CPU_TEMP_PATH := /sys/class/thermal/thermal_zone1/temp
-RECOVERY_SDCARD_ON_DATA := true 
-TW_INTERNAL_STORAGE_PATH := "/data/media"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
-TW_EXTERNAL_STORAGE_PATH := "/storage/sdcard1"
-TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard1"
+#BOARD_HAS_NO_REAL_SDCARD := false
+#TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
+#RECOVERY_SDCARD_ON_DATA := true 
 TARGET_USES_LOGD := true

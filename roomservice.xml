@@ -49,9 +49,10 @@
 
   <!-- And finally checkout components specifics to Lenovo TB3-710F -->
    <project path="device/lenovo/TB3_710F" name="device_lenovo_TB3_710F" remote="szazs89" revision="master" />
-   <!-- own vendor dirs (proprietary files) aren't added yet:
+   <!-- update vendor dirs by owns (proprietary files):
 	use extract-files.sh to obtain them from the stock /system dir of your device;
 	the repository below does not contain all the necessary files, afraid -->
-   <!-- project path="vendor/lenovo/TB3_710F" name="android_vendor_lenovo_TB3_710F" remote="andrew264" revision="master" / -->
+<!-- project path="vendor/lenovo/TB3_710F" name="android_vendor_lenovo_Tab2A710F" remote="lenovo" revision="cm-12.1" / -->
+    <project path="vendor/lenovo/TB3_710F" name="android_vendor_lenovo_TB3_710F" remote="andrew264" revision="master" />
 
 </manifest>
